@@ -181,10 +181,11 @@ class PDF(FPDF):
 
 # Email function using Hostinger SMTP
 def send_email_with_pdf(to_email, pdf_path):
-    from_email = os.getenv("MAIL_USERNAME")
-    password = os.getenv("MAIL_PASSWORD")
-    smtp_server = os.getenv("SMTP_SERVER", "smtp.hostinger.com")
-    smtp_port = int(os.getenv("SMTP_PORT", 465))
+    from_email = "info@h2rsbitwaveacademy.in"
+    password = "Info@h2rsbitwave"  # Replace with actual mailbox password
+    smtp_server = "smtp.hostinger.com"
+    smtp_port = 465  # SSL
+
 
 
     msg = MIMEMultipart()
@@ -240,5 +241,6 @@ def register():
     return render_template_string(template, receipt=False)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=int(os.environ.get("PORT", 5000)))
+
 
