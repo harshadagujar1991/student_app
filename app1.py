@@ -9,6 +9,12 @@ import os
 
 app = Flask(__name__)
 
+# Add this right after app is created 
+@app.route("/health") 
+def health(): 
+    return "OK"
+
+
 # HTML template with status message
 template = """
 <!DOCTYPE html>
@@ -139,7 +145,8 @@ template = """
 class PDF(FPDF):
     def header(self):
         # Add logo (make sure logo.png is in your project folder)
-        self.image("logo.png", 10, 8, 33)   # x=10, y=8, width=33mm
+        #self.image("logo.png", 10, 8, 33)   # x=10, y=8, width=33mm
+        self.image(os.path.join(os.path.dirname(__file__), "logo.png"), 10, 8, 33)
         self.set_font("Arial", "B", 14)
         self.cell(0, 10, "H2RS Bitwave Academy", ln=1, align="C")
         self.set_font("Arial", "I", 10)
@@ -181,10 +188,14 @@ class PDF(FPDF):
 
 # Email function using Hostinger SMTP
 def send_email_with_pdf(to_email, pdf_path):
-    from_email = "info@h2rsbitwaveacademy.in"
-    password = "Info@h2rsbitwave"  # Replace with actual mailbox password
-    smtp_server = "smtp.hostinger.com"
-    smtp_port = 465  # SSL
+    print("Preparing email...")
+    from_email = os.getenv("MAIL_USERNAME")
+    password = os.getenv("MAIL_PASSWORD")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.hostinger.com")
+    smtp_port = int(os.getenv("SMTP_PORT", 465))
+
+    print(f"Connecting to SMTP server {smtp_server}:{smtp_port} as {from_email}")
+
 
 
 
@@ -204,10 +215,13 @@ def send_email_with_pdf(to_email, pdf_path):
     try:
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL(smtp_server, smtp_port, context=context) as server:
+            print("Logging in...")
             server.login(from_email, password)
+            print("Sending email...")
             server.send_message(msg)
         return "Email sent successfully"
     except Exception as e:
+        print(f"Email failed: {e}")
         return f"Failed to send email: {str(e)}"
 
 @app.route("/", methods=["GET", "POST"])
