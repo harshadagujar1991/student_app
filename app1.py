@@ -10,9 +10,9 @@ import os
 app = Flask(__name__)
 
 # Add this right after app is created 
-@app.route("/health") 
-def health(): 
-    return "OK"
+@app.route('/health')
+def health():
+    return "OK", 200
 
 
 # HTML template with status message
@@ -189,14 +189,14 @@ class PDF(FPDF):
 # Email function using Hostinger SMTP
 def send_email_with_pdf(to_email, pdf_path):
     print("Preparing email...")
-    #from_email = os.getenv("MAIL_USERNAME")
-    from_email = "info@h2rsbitwaveacademy.in"
-    #password = os.getenv("MAIL_PASSWORD")
-    password = "Info@h2rsbitwave" # Replace with actual mailbox password
-    #smtp_server = os.getenv("SMTP_SERVER", "smtp.hostinger.com")
-    smtp_server = "smtp.hostinger.com"
-    #smtp_port = int(os.getenv("SMTP_PORT", 465))
-    smtp_port = 465 # SSL
+    from_email = os.getenv("MAIL_USERNAME")
+    #from_email = "info@h2rsbitwaveacademy.in"
+    password = os.getenv("MAIL_PASSWORD")
+    #password = "Info@h2rsbitwave" # Replace with actual mailbox password
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.hostinger.com")
+    #smtp_server = "smtp.hostinger.com"
+    smtp_port = int(os.getenv("SMTP_PORT", 465))
+    #smtp_port = 465 # SSL
 
     print(f"Connecting to SMTP server {smtp_server}:{smtp_port} as {from_email}")
 
